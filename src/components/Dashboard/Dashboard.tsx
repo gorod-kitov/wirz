@@ -2,6 +2,8 @@ import React from 'react';
 import Header from './Header';
 import BreadCrumbs from './BreadCrumbs';
 import Filters from './Filters';
+import Perfomance from './Perfomance';
+import Counters from './Counters';
 
 const Dashboard: React.FC = () => {
 	return (
@@ -15,6 +17,8 @@ const Dashboard: React.FC = () => {
 					]}
 				/>
 				<Filters />
+				<Counters />
+				<Perfomance />
 			</div>
 		</div>
 	)

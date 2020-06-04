@@ -24,6 +24,14 @@ export const theme = createMuiTheme({
 				}
 			},
 		},
+		MuiCard: {
+			root: {
+				borderRadius: '2px',
+				boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
+				transition: '.15s ease-out'
+			},
+
+		},
 		MuiOutlinedInput: {
 			notchedOutline: {
 				borderColor: '#000 !important'
