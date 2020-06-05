@@ -7,6 +7,7 @@ import AuthBg from 'assets/images/auth-login.png';
 import RightArrow from '@material-ui/icons/ArrowRightAlt';
 import MailIcon from '@material-ui/icons/Email';
 import history from 'stores/history';
+import { AuthService } from 'services';
 
 const useStyles = makeStyles(() => ({
 	textfield: {
@@ -27,16 +28,18 @@ const Login: React.FC = () => {
 	const [stayInSystemIsOn, setStayInSystemIsOn] = useState<boolean>(false);
 	const classes = useStyles();
 
+	useEffect(() => {
+		setEmailError('');
+	}, [email]);
+
+	useEffect(() => {
+		setPasswordError('');
+	}, [password]);
+
 	const validate = (): boolean => {
 		setEmailError(email ? '' : 'Bitte geben Sie einen Benutzernamen ein.');
 		setPasswordError(password ? '' : 'Bitte geben Sie Ihr Passwort ein.');
 		return (email && password) ? true : false;
-	}
-
-	const handleLogin = () => {
-		if (validate()) {
-			history.push('/dashboard');
-		}
 	}
 
 	const handleKeyDown = (keyCode: number) => {
@@ -45,13 +48,23 @@ const Login: React.FC = () => {
 		}
 	}
 
-	useEffect(() => {
-		setEmailError('');
-	}, [email]);
-
-	useEffect(() => {
-		setPasswordError('');
-	}, [password]);
+	const handleLogin = () => {
+		if (validate()) {
+			const data = { email, password };
+			AuthService.login(data)
+				.then((res) => {
+					if (!res.status) {
+						AuthService.setUserToken(res.api_token);
+						history.push('/dashboard');
+					} else {
+						setPasswordError(res.message);
+					}
+				})
+				.catch((err) => {
+					console.error(err);
+				})
+		}
+	}
 
 	return (
 		<div

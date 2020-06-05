@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { inject, observer } from 'mobx-react';
+import { IAccountStore } from 'stores/interfaces';
+import 'react-nice-dates/build/style.css';
 import Header from './Header';
 import BreadCrumbs from './BreadCrumbs';
+import Metrics from './Metrics';
 import Filters from './Filters';
 import Perfomance from './Perfomance';
-import Counters from './Counters';
+import MetricsForm from './MetricsForm';
+import BasicMetricsForm from './BasicMetricsForm';
 
-const Dashboard: React.FC = () => {
+interface Stores {
+	account: IAccountStore
+}
+
+const Dashboard: React.FC<any> = inject('account')(observer(({ account }: Stores) => {
+
+	useEffect(() => {
+		account.loadData();
+	}, [])
+
 	return (
 		<div className="dashboard__container">
-			<Header />
+			<Header userName={account.data?.name || ''} />
 			<div className="dashboard__content">
 				<BreadCrumbs
 					values={[
@@ -16,12 +30,14 @@ const Dashboard: React.FC = () => {
 						{ link: '/dashboard', title: 'Ihre Kampagne auf einen Blick' },
 					]}
 				/>
-				<Filters />
-				<Counters />
+				<Filters campaignList={account.data?.campaigns} />
+				<Metrics />
 				<Perfomance />
+				<MetricsForm campaignList={account.data?.campaigns} />
+				<BasicMetricsForm campaignList={account.data?.campaigns} />
 			</div>
 		</div>
 	)
-}
+}));
 
-export default Dashboard;
+export default Dashboard; 

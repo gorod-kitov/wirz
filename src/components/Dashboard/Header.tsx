@@ -3,7 +3,7 @@ import {
 	Avatar, makeStyles
 } from '@material-ui/core';
 import { ReactComponent as HeaderIcon } from 'assets/icons/dashboard-header-icon.svg';
-import history from 'stores/history';
+import { AuthService } from 'services';
 
 const useStyles = makeStyles(() => ({
 	headerAvatar: {
@@ -13,7 +13,13 @@ const useStyles = makeStyles(() => ({
 	}
 }))
 
-const Header: React.FC = () => {
+interface Props {
+	userName: string
+}
+
+const Header: React.FC<Props> = ({
+	userName
+}) => {
 	const classes = useStyles();
 
 	const MenuButton = () => (
@@ -44,10 +50,10 @@ const Header: React.FC = () => {
 					className={classes.headerAvatar}
 				/>
 				<div className="dashboard__header__profile">
-					<span>Wirz Digital</span>
+					<span>{userName}</span>
 					<div
 						className="dashboard__header__profile__logout"
-						onClick={() => history.push('/login')}
+						onClick={() => AuthService.clearUserTokenAndLogout()}
 					>Logout</div>
 				</div>
 			</Section>

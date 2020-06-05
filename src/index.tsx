@@ -14,6 +14,8 @@ const uHistory = syncHistoryWithStore(history, routingStore);
 const stores = {
 	routingStore: routingStore,
 	RootStore: RootStore,
+	account: RootStore.account,
+	campaign: RootStore.campaign
 }
 
 ReactDOM.render(
