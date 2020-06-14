@@ -18,7 +18,7 @@ const Dashboard: React.FC<any> = inject('account')(observer(({ account }: Stores
 
 	useEffect(() => {
 		account.loadData();
-	}, [])
+	}, [account]);
 
 	return (
 		<div className="dashboard__container">
@@ -31,10 +31,15 @@ const Dashboard: React.FC<any> = inject('account')(observer(({ account }: Stores
 					]}
 				/>
 				<Filters campaignList={account.data?.campaigns} />
-				<Metrics />
+				{account.data ? <Metrics /> : null}
 				<Perfomance />
-				<MetricsForm campaignList={account.data?.campaigns} />
-				<BasicMetricsForm campaignList={account.data?.campaigns} />
+				{
+					account.data?.id === 1 ?
+						<>
+							<MetricsForm campaignList={account.data?.campaigns} />
+							<BasicMetricsForm campaignList={account.data?.campaigns} />
+						</> : null
+				}
 			</div>
 		</div>
 	)

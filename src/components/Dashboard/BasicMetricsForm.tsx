@@ -22,7 +22,8 @@ const useStyles = makeStyles(() => ({
 		justifyContent: 'flex-start',
 		alignItems: 'flex-end',
 		padding: '20px',
-		paddingBottom: '40px !important'
+		paddingBottom: '40px !important',
+		overflowX: 'auto'
 	},
 	optionsContainer: {
 		display: 'flex',

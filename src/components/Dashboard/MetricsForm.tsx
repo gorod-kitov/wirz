@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { inject, observer } from 'mobx-react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import {
 	Card, CardContent,
 	Table, TableHead, TableCell,
 	TableRow, TableBody, TextField,
-	Button, IconButton, makeStyles
+	Button, IconButton, makeStyles,
+	Theme
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -14,24 +16,35 @@ import { DatePicker } from 'react-nice-dates'
 import { CampaignService } from 'services';
 import dayjs from 'dayjs';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import { ICampaignStore } from 'stores/interfaces';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
 	container: {
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
 		alignItems: 'flex-end',
 		padding: '20px',
-		paddingBottom: '40px !important'
+		paddingBottom: '40px !important',
 	},
 	optionsContainer: {
 		display: 'flex',
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		[theme.breakpoints.down('sm')]: {
+			flexDirection: 'column',
+			justifyContent: 'flex-start',
+			alignItems: 'flex-start',
+			width: '100%'
+		}
 	},
 	campaignAutocomplete: {
 		width: '200px',
-		marginLeft: '25px'
+		marginLeft: '25px',
+		[theme.breakpoints.down('sm')]: {
+			marginTop: '20px',
+			marginLeft: '10px'
+		}
 	},
 	buttonIcon: {
 		marginLeft: '6px',
@@ -76,14 +89,13 @@ interface ICampaign {
 }
 
 interface Props {
+	campaign: ICampaignStore,
 	campaignList: ICampaign[] | undefined
 }
 
-const MetricsForm: React.FC<Props> = ({
-	campaignList
-}) => {
+const MetricsForm: React.FC<any> = inject('campaign')(observer(({ campaign, campaignList }: Props) => {
 	const [date, setDate] = useState<any>(new Date());
-	const [campaign, setCampaign] = useState<string>('');
+	const [campaignName, setCampaignName] = useState<string>('');
 	const [totalReach, setTotalReach] = useState<number>(0);
 	const [totalReachIsActive, setTotalReachIsActive] = useState<boolean>(true);
 	const [clicks, setClicks] = useState<number>(0);
@@ -107,15 +119,25 @@ const MetricsForm: React.FC<Props> = ({
 
 	useEffect(() => {
 		if (campaignList?.length) {
-			setCampaign(campaignList[0].name);
+			setCampaignName(campaignList[0].name);
 		}
-	}, [campaignList])
+	}, [campaignList]);
+
+	useEffect(() => {
+		setTotalReachIsActive(campaign.metrics1?.total_reach_is_active ? true : false);
+		setClicksIsActive(campaign.metrics1?.clickouts_is_active ? true : false);
+		setAdEngagementIsActive(campaign.metrics1?.ad_engagement_is_active ? true : false);
+		setPageEngagementIsActive(campaign.metrics1?.page_engagement_is_active ? true : false);
+		setActiveLengthIsActive(campaign.metrics1?.active_length_is_active ? true : false);
+		setClickoutsIsActive(campaign.metrics1?.clickouts_is_active ? true : false);
+		setSalesIsActive(campaign.metrics1?.sales_is_active ? true : false);
+	}, [campaign.metrics1])
 
 
 	const handleSave = () => {
 		const data = {
 			date: dayjs(date).format('YYYY-MM-DD 00:00:00'),
-			campaign,
+			campaign: campaignName,
 			totalReach,
 			totalReachIsActive,
 			clicks,
@@ -137,7 +159,7 @@ const MetricsForm: React.FC<Props> = ({
 					value: res.message,
 					error: res.status ? true : false
 				});
-				setCampaign('');
+				setCampaignName('');
 				setTotalReach(0);
 				setClicks(0);
 				setAdEngagement(0);
@@ -177,13 +199,13 @@ const MetricsForm: React.FC<Props> = ({
 						)}
 					</DatePicker>
 					<Autocomplete
-						value={campaign}
+						value={campaignName}
 						autoHighlight
 						className={classes.campaignAutocomplete}
 						options={campaignList?.map((campaign: ICampaign) => campaign.name) || []}
 						onChange={(event: any, newValue: string | null) => {
 							if (newValue) {
-								setCampaign(newValue);
+								setCampaignName(newValue);
 							}
 						}}
 						renderInput={(params) => (
@@ -268,14 +290,14 @@ const MetricsForm: React.FC<Props> = ({
 										/>
 									</TableCell>
 									<TableCell>
-										{/* <div className={classes.activeStatus}>
+										<div className={classes.activeStatus}>
 											<IconButton edge="end" onClick={() => metric.setIsActive(!metric.isActive)}>
 												{
 													metric.isActive ? <VisibilityIcon className={classes.activeIcon} style={{ color: '#121212' }} />
 														: <VisibilityOffIcon className={classes.activeIcon} />
 												}
 											</IconButton>
-										</div> */}
+										</div>
 									</TableCell>
 								</TableRow>
 							))
@@ -286,6 +308,7 @@ const MetricsForm: React.FC<Props> = ({
 					variant="outlined"
 					className={classes.saveButton}
 					onClick={() => handleSave()}
+					disabled={!campaign}
 				>
 					Publish
 					<SaveIcon className={classes.buttonIcon} />
@@ -300,7 +323,7 @@ const MetricsForm: React.FC<Props> = ({
 			}
 		</Card>
 	)
-}
+}));
 
 export default MetricsForm;
 

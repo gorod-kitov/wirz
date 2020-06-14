@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { AuthService } from '../services';
-export const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://wirz' : 'https://api.online-maestro.com';
+export const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://wirz' : 'http://api.test-server-for-good-guys.online';
 export const BASE_API_URL = `${BASE_URL}/api`;
 
 const catchError = (e) => {

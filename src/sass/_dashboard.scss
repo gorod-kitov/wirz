@@ -17,8 +17,12 @@
 		max-width: 1280px;
 	}
 
-	@media screen and (max-width: 1280px) {
+	@media screen and (max-width: 1360px) {
 		max-width: 1140px;
+	}
+
+	@media screen and (max-width: 1280px) {
+		max-width: 95%;
 	}
 }
 
@@ -142,13 +146,40 @@
 			border-radius: 0;
 		}
 	}
+
+	@media screen and (max-width: 600px) {
+		> div {
+			margin-bottom: 20px;
+
+			.date__picker {
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-start;
+				align-items: flex-start;
+
+				svg {
+					margin: 10px 20px;
+				}
+			}
+
+			&:first-child {
+				margin-left: 10px;
+			}
+		}
+
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: flex-start;
+	}
 }
 
 .dashboard__metrics {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
 	align-items: flex-start;
 	position: relative;
+	flex-wrap: wrap;
 
 	&__group {
 		width: calc(50% - 10px);
@@ -165,11 +196,51 @@
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: flex-end;
-	width: calc(50% - 10px);
+	width: calc(25% - 15px);
 	margin: 10px 0;
 	cursor: pointer;
 	background: #fff;
 	transition: 0.3s ease-out;
+	margin-right: 20px;
+
+	@media screen and (min-width: 1280px) {
+		&:nth-of-type(4n) {
+			margin-right: 0;
+		}
+	}
+
+	@media screen and (max-width: 1280px) {
+		width: calc(33.3% - 15px);
+		&:nth-of-type(3n) {
+			margin-right: 0;
+		}
+		&:nth-of-type(4n) {
+			margin-right: 20px;
+		}
+	}
+
+	@media screen and (max-width: 800px) {
+		width: calc(50% - 15px);
+		&:nth-of-type(3n) {
+			margin-right: 20px;
+		}
+		&:nth-of-type(4n) {
+			margin-right: 20px;
+		}
+		&:nth-of-type(2n) {
+			margin-right: 0;
+		}
+	}
+
+	@media screen and (max-width: 600px) {
+		width: 100%;
+		margin-right: 0;
+		&:nth-of-type(2n),
+		&:nth-of-type(3n),
+		&:nth-of-type(4n) {
+			margin-right: 0;
+		}
+	}
 
 	&:hover {
 		background: #2f2f2f;
@@ -205,6 +276,10 @@
 		font-weight: 700;
 		color: #000;
 		font-size: 3.28571429rem;
+
+		@media screen and (max-width: 600px) {
+			font-size: 38px;
+		}
 	}
 
 	&__subtitle {
@@ -266,9 +341,29 @@
 	margin-bottom: 20px;
 }
 
+.nice-dates {
+	position: relative;
+}
+
 .dashboard__metrics__form {
 	margin-bottom: 20px;
 	.nice-dates-popover {
+		right: 0 !important;
 		width: 290px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	tspan {
+		font-size: 14px;
+	}
+
+	.dashboard__header {
+		flex-direction: column;
+
+		.dashboard__header__section,
+		.dashboard__header__title {
+			margin-bottom: 20px;
+		}
 	}
 }
